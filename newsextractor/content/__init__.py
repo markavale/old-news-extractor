@@ -422,31 +422,34 @@ class Content:
         # GET COMPARISON DATA
         VALID_KEY_DATA = Compare(VALID_KEYS)
         comparison = None
+        if tag.attrs:
 
-        for _, v in tag.attrs.items():
+            for _, v in tag.attrs.items():
 
-            for key in VALID_KEYS:
-                # SET TAG ATTRIBUTE VALUE FOR COMPARISON TO KEYS
-                if not isinstance(v, list):
-                    comparison = VALID_KEY_DATA.eval(v)
-                
-                if key in v:
-                    return True
-                elif isinstance(v, list) and any(key in i for i in v): # IF V IS A LIST ITERATE THRU ITEMS IN V AND CHECK FOR KEY
-                    return True
-                elif comparison: # IF KEY IS SIMILAR TO V
-                    similarity = str(comparison[0]['similarity']).rstrip("%")
-
-                    if int(similarity) >= 70:
+                for key in VALID_KEYS:
+                    # SET TAG ATTRIBUTE VALUE FOR COMPARISON TO KEYS
+                    if not isinstance(v, list):
+                        comparison = VALID_KEY_DATA.eval(v)
+                    
+                    if key in v:
                         return True
-                elif isinstance(v, list):
-                    for _v in v:
-                        _comparison = VALID_KEY_DATA.eval(_v)
+                    elif isinstance(v, list) and any(key in i for i in v): # IF V IS A LIST ITERATE THRU ITEMS IN V AND CHECK FOR KEY
+                        return True
+                    elif comparison: # IF KEY IS SIMILAR TO V
+                        similarity = str(comparison[0]['similarity']).rstrip("%")
 
-                        if _comparison:
-                            similarity = str(_comparison[0]['similarity']).rstrip("%")
-                        
-                            if int(similarity) >= 70: return True
+                        if int(similarity) >= 70:
+                            return True
+                    elif isinstance(v, list):
+                        for _v in v:
+                            _comparison = VALID_KEY_DATA.eval(_v)
+
+                            if _comparison:
+                                similarity = str(_comparison[0]['similarity']).rstrip("%")
+                            
+                                if int(similarity) >= 70: return True
+        else:
+            return True
 
     def __is_invalid_tag(self, tag):
         """
